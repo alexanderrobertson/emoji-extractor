@@ -17,3 +17,11 @@ It counts the emoji in a string, returning the emoji and their counts. That's it
 # Other work
 
 If you want to do stuff more complicated than simply detecting, extracting and counting emoji then you might find [this Python package useful](https://github.com/carpedm20/emoji/).
+
+# To do
+
+It may be possible to speed up the extraction/counting process by limited the regular expression used to only those which are possible, given the unique detected characters. I guess it would depend on how quickly the new smaller regex can be compiled. Storing them might be possible but the combinations are likely to be prohibitive.
+
+# Anything else.
+
+Feel free to email me about any of this stuff.
