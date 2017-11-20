@@ -3,3 +3,5 @@ README.txt
 setup.py
 emoji_extractor/__init__.py
 emoji_extractor/extract.py
+emoji_extractor/data/big_regex.pkl
+emoji_extractor/data/possible_emoji.pkl

@@ -1,5 +1,9 @@
 # Emoji extractor/counter
 
+# Installation
+
+```pip install emoji_extractor```
+
 Usage examples: [see this Jupyter notebook](https://github.com/alexanderrobertson/emoji-extractor/blob/master/notebooks/examples.ipynb)
 
 # Info

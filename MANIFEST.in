@@ -1,0 +1,2 @@
+include emoji_extractor/big_regex.pkl
+include emoji_extractor/possible_emoji.pkl
