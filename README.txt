@@ -1,5 +1,9 @@
 # Emoji extractor/counter
 
+# Installation
+
+```pip install emoji_extractor```
+
 Usage examples: [see this Jupyter notebook](https://github.com/alexanderrobertson/emoji-extractor/blob/master/notebooks/examples.ipynb)
 
 # Info
@@ -8,11 +12,11 @@ It counts the emoji in a string, returning the emoji and their counts. That's it
 
 # Details
 
-* Uses [v6.0β of the current Full Emoji List](http://www.unicode.org/emoji/charts-6.0/full-emoji-list.html).
+* Uses [v11.0β of the current Full Emoji List](https://unicode.org/emoji/charts-11.0/full-emoji-list.html).
 
 * possible_emoji.pkl is a pickled set of possible emoji, used to check for their presence in a string with a few additional characters like the exciting [VARIATION-SELECTOR-16](https://emojipedia.org/variation-selector-16/) and the individual characters which make up flag sequences.
 
-* big_regex.pkl is a pickled compiled regular expression. It's just 2623 regular expressions piped together in order of decreasing length. This is important to make sure that you can count multi-codepoint sequences like '💁🏽\u200d♂️' and so on.
+* big_regex.pkl is a pickled compiled regular expression. It's just 2753 regular expressions piped together in order of decreasing length. This is important to make sure that you can count multi-codepoint sequences like '💁🏽\u200d♂️' and so on.
 
 # Other work
 
