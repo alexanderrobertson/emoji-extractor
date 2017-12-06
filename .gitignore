@@ -1,2 +1,6 @@
 dist/
+.git/
+.ipynb_checkpoints/
+make regex/
 setup.py
+MANIFEST.in

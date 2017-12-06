@@ -12,7 +12,7 @@ It counts the emoji in a string, returning the emoji and their counts. That's it
 
 # Details
 
-* Uses [v6.0β of the current Full Emoji List](http://www.unicode.org/emoji/charts-6.0/full-emoji-list.html).
+* Uses [v11.0β of the current Full Emoji List](https://unicode.org/emoji/charts-11.0/full-emoji-list.html).
 
 * possible_emoji.pkl is a pickled set of possible emoji, used to check for their presence in a string with a few additional characters like the exciting [VARIATION-SELECTOR-16](https://emojipedia.org/variation-selector-16/) and the individual characters which make up flag sequences.
 
