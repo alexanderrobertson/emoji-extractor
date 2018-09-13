@@ -1,7 +1,7 @@
 import re
 import pickle
 import pkg_resources
-from collections import Counter
+from collections import Counter, Iterable
 
 data_path = pkg_resources.resource_filename('emoji_extractor', 'data/')
 
@@ -35,7 +35,13 @@ class Extractor:
     def count_all_emoji(self, iterable, check_first=True):
         running_total = Counter()
 
-        for string in iterable:
-            running_total.update(self.count_emoji(string, check_first=check_first))
+        if type(iterable) == str:
+            raise TypeError("This method is not for single strings. Use count_emoji() instead")
 
-        return running_total
+        try:
+            for string in iterable:
+                running_total.update(self.count_emoji(string, check_first=check_first))
+
+            return running_total
+        except:
+            raise TypeError('This method requires an iterable of strings.')
