@@ -4,3 +4,4 @@ dist/
 make regex/
 setup.py
 MANIFEST.in
+MANIFEST
