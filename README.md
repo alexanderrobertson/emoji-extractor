@@ -12,11 +12,11 @@ It counts the emoji in a string, returning the emoji and their counts. That's it
 
 # Details
 
-* Uses [v13.1 of the current Full Emoji List](https://unicode.org/emoji/charts-13.1/full-emoji-list.html).
+* Uses [v14.0 of the current Full Emoji List](https://unicode.org/emoji/charts-14.0/full-emoji-list.html).
 
-* possible_emoji.pkl is a pickled set of possible emoji, used to check for their presence in a string with a few additional characters like the exciting [VARIATION-SELECTOR-16](https://emojipedia.org/variation-selector-16/) and the individual characters which make up flag sequences.
+* `possible_emoji.pkl` is a pickled set of possible emoji, used to check for their presence in a string with a few additional characters like the exciting [VARIATION-SELECTOR-16](https://emojipedia.org/variation-selector-16/) and the individual characters which make up flag sequences.
 
-* big_regex.pkl is a pickled compiled regular expression. It's just 3516 regular expressions piped together in order of decreasing length. This is important to make sure that you can count multi-codepoint sequences like '💁🏽\u200d♂️' and so on.
+* `big_regex.pkl` is a pickled compiled regular expression. It's just 3628 regular expressions piped together in order of decreasing length. This is important to make sure that you can count multi-codepoint sequences like '💁🏽\u200d♂️' and so on.
 
 # Other work
 
