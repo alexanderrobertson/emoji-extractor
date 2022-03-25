@@ -1,7 +1,8 @@
 import re
 import pickle
 import pkg_resources
-from collections import Counter, Iterable
+from collections import Counter
+from collections.abc import Iterable
 
 data_path = pkg_resources.resource_filename('emoji_extractor', 'data/')
 
