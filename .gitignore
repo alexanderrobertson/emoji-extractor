@@ -2,6 +2,7 @@ dist/
 .git/
 .ipynb_checkpoints/
 make regex/
+__pycache__/
 setup.py
 MANIFEST.in
 MANIFEST
