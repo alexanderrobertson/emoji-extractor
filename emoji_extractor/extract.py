@@ -1,15 +1,16 @@
 import re
 import pickle
-import pkg_resources
+
+from importlib import resources
+
 from collections import Counter
 from collections.abc import Iterable
 
-data_path = pkg_resources.resource_filename('emoji_extractor', 'data/')
+data_path = resources.files('emoji_extractor') / 'data'
 
-regex_file = 'big_regex.pkl'
-emoji_file = 'possible_emoji.pkl'
-tme_regex_file = 'tme_regex.pkl'
-
+regex_file = data_path / 'big_regex.pkl'
+emoji_file = data_path / 'possible_emoji.pkl'
+tme_regex_file = data_path / 'tme_regex.pkl'
 
 
 class Extractor:
@@ -17,7 +18,7 @@ class Extractor:
     Extract emoji from strings.
     Return a count of the emoji found.
     """
-    def __init__(self, regex=data_path+regex_file, emoji=data_path+emoji_file, tme=data_path+tme_regex_file):
+    def __init__(self, regex=regex_file, emoji=emoji_file, tme=tme_regex_file):
         with open(regex, 'rb') as f:
             self.big_regex = pickle.load(f)
 
