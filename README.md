@@ -4,6 +4,8 @@
 
 ```pip install emoji_extractor```
 
+```conda install emoji-extractor -c conda-forge```
+
 Usage examples: [see this Jupyter notebook](https://github.com/alexanderrobertson/emoji-extractor/blob/master/notebooks/examples.ipynb)
 
 # Info
