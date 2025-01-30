@@ -15,7 +15,7 @@ There is an update script in `update_regex` which can be used to update to the l
 
 # Details
 
-* Uses [v16.0 of the current Full Emoji List](https://unicode.org/emoji/charts-16.0/full-emoji-list.html).
+* Uses [v16.0 of the current emoji test data](https://unicode.org/Public/emoji/16.0/emoji-test.txt).
 
 * `possible_emoji.pkl` is a pickled set of possible emoji, used to check for their presence in a string with a few additional characters like the exciting [VARIATION-SELECTOR-16](https://emojipedia.org/variation-selector-16/) and the individual characters which make up flag sequences.
 
