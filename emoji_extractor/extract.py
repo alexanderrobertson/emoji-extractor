@@ -1,14 +1,13 @@
 import re
 import pkg_resources
+import json
+import os
 from collections import Counter
 from collections.abc import Iterable
-
-data_path = pkg_resources.resource_filename('emoji_extractor', 'data/')
 
 regex_file = 'big_regex.txt'
 emoji_file = 'possible_emoji.json'
 tme_regex_file = 'tme_regex.txt'
-
 
 
 class Extractor:
@@ -16,18 +15,44 @@ class Extractor:
     Extract emoji from strings.
     Return a count of the emoji found.
     """
-    def __init__(self, regex=data_path+regex_file, emoji=data_path+emoji_file, tme=data_path+tme_regex_file):
-        import json
-        with open(regex, 'r', encoding='utf-8') as f:
-            self.big_regex = re.compile(f.read(), re.UNICODE)
+    def __init__(self, version='latest'):
+        self.version = str(version)
+        self.data_path = pkg_resources.resource_filename('emoji_extractor', f'data/{self.version}/')
+        
+        if not os.path.exists(self.data_path):
+            raise ValueError(f"Emoji data for version '{self.version}' not found.")
+        
+        self._big_regex = None
+        self._possible_emoji = None
+        self._tme = None
+        self._tones_re = None
 
-        with open(emoji, 'r', encoding='utf-8') as f:
-            self.possible_emoji = set(json.load(f))
+    @property
+    def big_regex(self):
+        if self._big_regex is None:
+            with open(os.path.join(self.data_path, regex_file), 'r', encoding='utf-8') as f:
+                self._big_regex = re.compile(f.read(), re.UNICODE)
+        return self._big_regex
 
-        with open(tme, 'r', encoding='utf-8') as f:
-            self.tme = re.compile(f.read(), re.UNICODE)
+    @property
+    def possible_emoji(self):
+        if self._possible_emoji is None:
+            with open(os.path.join(self.data_path, emoji_file), 'r', encoding='utf-8') as f:
+                self._possible_emoji = set(json.load(f))
+        return self._possible_emoji
 
-        self.tones_re = re.compile(r'[🏻🏼🏽🏾🏿]', re.UNICODE)
+    @property
+    def tme(self):
+        if self._tme is None:
+            with open(os.path.join(self.data_path, tme_regex_file), 'r', encoding='utf-8') as f:
+                self._tme = re.compile(f.read(), re.UNICODE)
+        return self._tme
+
+    @property
+    def tones_re(self):
+        if self._tones_re is None:
+            self._tones_re = re.compile(r'[🏻🏼🏽🏾🏿]', re.UNICODE)
+        return self._tones_re
 
     def detect_emoji(self, string):
         return set(string).intersection(self.possible_emoji) != set()
