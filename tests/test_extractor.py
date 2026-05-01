@@ -45,12 +45,13 @@ class TestExtractor(unittest.TestCase):
         self.assertEqual(counts['🍎'], 1)
         self.assertEqual(counts['🍌'], 2)
 
-    @patch('pkg_resources.resource_filename')
-    def test_version_isolation(self, mock_resource_filename):
+    @patch('emoji_extractor.extract.importlib.resources.files')
+    def test_version_isolation(self, mock_files):
         import tempfile
+        import pathlib
         with tempfile.TemporaryDirectory() as tmp_path:
-            version_dir = os.path.join(tmp_path, "1.0")
-            os.mkdir(version_dir)
+            version_dir = os.path.join(tmp_path, "data", "1.0")
+            os.makedirs(version_dir)
             
             with open(os.path.join(version_dir, "possible_emoji.json"), "w", encoding="utf-8") as f:
                 f.write('["🍎"]')
@@ -59,7 +60,7 @@ class TestExtractor(unittest.TestCase):
             with open(os.path.join(version_dir, "tme_regex.txt"), "w", encoding="utf-8") as f:
                 f.write('🍎')
                 
-            mock_resource_filename.return_value = version_dir
+            mock_files.return_value = pathlib.Path(tmp_path)
             
             extractor = Extractor(version='1.0')
             self.assertEqual(extractor.version, '1.0')

@@ -1,5 +1,5 @@
 import re
-import pkg_resources
+import importlib.resources
 import json
 import os
 from collections import Counter
@@ -11,13 +11,15 @@ tme_regex_file = 'tme_regex.txt'
 
 
 class Extractor:
-    """
+    """Some
     Extract emoji from strings.
     Return a count of the emoji found.
     """
     def __init__(self, version='latest'):
         self.version = str(version)
-        self.data_path = pkg_resources.resource_filename('emoji_extractor', f'data/{self.version}/')
+        # Use importlib.resources instead of the deprecated pkg_resources
+        base_path = importlib.resources.files('emoji_extractor')
+        self.data_path = str(base_path.joinpath(f'data/{self.version}/'))
         
         if not os.path.exists(self.data_path):
             raise ValueError(f"Emoji data for version '{self.version}' not found.")
