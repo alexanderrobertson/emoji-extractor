@@ -66,5 +66,14 @@ class TestExtractor(unittest.TestCase):
             self.assertTrue(extractor.detect_emoji("Testing 🍎"))
             self.assertFalse(extractor.detect_emoji("Testing 1️⃣"))
 
+    def test_all_downloaded_versions(self):
+        # We ensure that every version we've downloaded can be instantiated
+        # and has a non-empty regex pattern.
+        for version in ['4.0', '5.0', '11.0', '12.0', '12.1', '13.0', '14.0', '15.0', '15.1', '16.0', 'latest']:
+            extractor = Extractor(version=version)
+            self.assertEqual(extractor.version, version)
+            self.assertIsNotNone(extractor.big_regex)
+            self.assertTrue(len(extractor.possible_emoji) > 0)
+
 if __name__ == '__main__':
     unittest.main()
