@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "emoji_extractor"
@@ -20,6 +20,10 @@ dependencies = []
 [project.urls]
 Homepage = "https://github.com/alexanderrobertson/emoji-extractor"
 
-[tool.setuptools]
+[tool.hatch.build.targets.wheel]
 packages = ["emoji_extractor"]
-include-package-data = true
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "emoji_extractor",
+]
