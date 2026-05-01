@@ -21,7 +21,7 @@ def count_emoji(string, check_first=True):
 
 def count_tme(string, check_first=True):
     """
-    Count the occurrences of emoji and text-mode emoji.
+    Count the occurrences of tone-modifiable emoji.
     Note: Operates on the latest Unicode version only.
     """
     return _default_extractor.count_tme(string, check_first=check_first)
@@ -49,7 +49,7 @@ def count_all_emoji(iterable, check_first=True):
 
 def count_all_tme(iterable, check_first=True):
     """
-    Count emoji and text-mode emoji across an iterable of strings.
+    Count tone-modifiable emoji across an iterable of strings.
     Note: Operates on the latest Unicode version only.
     """
     return _default_extractor.count_all_tme(iterable, check_first=check_first)
