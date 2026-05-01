@@ -1,0 +1,55 @@
+from .extract import Extractor
+
+# Global instance for convenience functions. 
+# This default extractor will only ever use the latest Unicode version.
+# For specific versions, instantiate the Extractor class directly.
+_default_extractor = Extractor()
+
+def detect_emoji(string):
+    """
+    Detect if a string contains any emoji.
+    Note: Operates on the latest Unicode version only.
+    """
+    return _default_extractor.detect_emoji(string)
+
+def count_emoji(string, check_first=True):
+    """
+    Count the occurrences of each emoji in a string.
+    Note: Operates on the latest Unicode version only.
+    """
+    return _default_extractor.count_emoji(string, check_first=check_first)
+
+def count_tme(string, check_first=True):
+    """
+    Count the occurrences of emoji and text-mode emoji.
+    Note: Operates on the latest Unicode version only.
+    """
+    return _default_extractor.count_tme(string, check_first=check_first)
+
+def count_tones(string, check_first=True):
+    """
+    Count the occurrences of skin tones.
+    Note: Operates on the latest Unicode version only.
+    """
+    return _default_extractor.count_tones(string, check_first=check_first)
+
+def count_all_tones(iterable, check_first=True):
+    """
+    Count skin tones across an iterable of strings.
+    Note: Operates on the latest Unicode version only.
+    """
+    return _default_extractor.count_all_tones(iterable, check_first=check_first)
+
+def count_all_emoji(iterable, check_first=True):
+    """
+    Count emoji across an iterable of strings.
+    Note: Operates on the latest Unicode version only.
+    """
+    return _default_extractor.count_all_emoji(iterable, check_first=check_first)
+
+def count_all_tme(iterable, check_first=True):
+    """
+    Count emoji and text-mode emoji across an iterable of strings.
+    Note: Operates on the latest Unicode version only.
+    """
+    return _default_extractor.count_all_tme(iterable, check_first=check_first)
