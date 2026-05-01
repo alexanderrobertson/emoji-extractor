@@ -22,9 +22,9 @@ def update_latest():
     text = response.text
     
     # Parse version from header
-    version_match = re.search(r"# Emoji Version:\s*([0-9.]+)", text)
+    version_match = re.search(r"# Version:\s*([0-9.]+)", text)
     if not version_match:
-        print("Could not find Emoji Version in the file header.")
+        print("Could not find version in the file header.")
         sys.exit(1)
         
     version = version_match.group(1)
