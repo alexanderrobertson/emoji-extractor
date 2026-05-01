@@ -1,0 +1,29 @@
+name: Automate Unicode Updates
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Every Sunday at midnight
+  workflow_dispatch:
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install requests
+      - name: Run update script
+        id: update
+        run: python update_latest.py
+      - name: Create Pull Request
+        if: steps.update.outputs.updated == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "feat: update unicode emoji data to version ${{ steps.update.outputs.new_version }}"
+          title: "Update Unicode Emoji Data to Version ${{ steps.update.outputs.new_version }}"
+          body: "This PR automatically updates the emoji regexes and data for the latest Unicode version (${{ steps.update.outputs.new_version }})."
+          branch: "update-unicode-${{ steps.update.outputs.new_version }}"
