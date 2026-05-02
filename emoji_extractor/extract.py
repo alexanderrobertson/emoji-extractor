@@ -3,21 +3,21 @@ import importlib.resources
 import json
 import os
 from collections import Counter
-from collections.abc import Iterable
+
 
 regex_file = 'big_regex.txt'
 emoji_file = 'possible_emoji.json'
 tme_regex_file = 'tme_regex.txt'
 
+DEFAULT_VERSION = '16.0'
 
 class Extractor:
     """Some
     Extract emoji from strings.
     Return a count of the emoji found.
     """
-    def __init__(self, version='latest'):
+    def __init__(self, version=DEFAULT_VERSION):
         self.version = str(version)
-        # Use importlib.resources instead of the deprecated pkg_resources
         base_path = importlib.resources.files('emoji_extractor')
         self.data_path = str(base_path.joinpath(f'data/{self.version}/'))
         

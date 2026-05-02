@@ -29,7 +29,6 @@ def update_latest():
         
     version = version_match.group(1)
     out_dir = f"emoji_extractor/data/{version}"
-    latest_dir = f"emoji_extractor/data/latest"
     
     if os.path.exists(out_dir):
         print(f"Version {version} is already up to date.")
@@ -93,14 +92,19 @@ def update_latest():
     with open(f"{out_dir}/possible_emoji.json", "w", encoding="utf-8") as f:
         json.dump(list(possible_emoji), f, ensure_ascii=False)
         
-    # Also overwrite latest dir
-    os.makedirs(latest_dir, exist_ok=True)
-    with open(f"{latest_dir}/big_regex.txt", "w", encoding="utf-8") as f:
-        f.write(big_regex_pattern)
-    with open(f"{latest_dir}/tme_regex.txt", "w", encoding="utf-8") as f:
-        f.write(tme_regex_pattern)
-    with open(f"{latest_dir}/possible_emoji.json", "w", encoding="utf-8") as f:
-        json.dump(list(possible_emoji), f, ensure_ascii=False)
+    # Update default version in extract.py
+    extract_py_path = "emoji_extractor/extract.py"
+    with open(extract_py_path, "r", encoding="utf-8") as f:
+        extract_content = f.read()
+    
+    extract_content = re.sub(
+        r"DEFAULT_VERSION\s*=\s*['\"].*?['\"]",
+        f"DEFAULT_VERSION = '{version}'",
+        extract_content
+    )
+    
+    with open(extract_py_path, "w", encoding="utf-8") as f:
+        f.write(extract_content)
         
     print(f"Successfully updated to Version {version}.")
     # We write a github output variable to trigger a commit/release

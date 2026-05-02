@@ -6,9 +6,9 @@ from emoji_extractor import Extractor, detect_emoji, count_emoji
 
 class TestExtractor(unittest.TestCase):
 
-    def test_extractor_init_latest(self):
+    def test_extractor_init_default(self):
         extractor = Extractor()
-        self.assertEqual(extractor.version, 'latest')
+        self.assertEqual(extractor.version, '16.0')
 
     def test_extractor_invalid_version(self):
         with self.assertRaises(ValueError) as context:
@@ -70,7 +70,7 @@ class TestExtractor(unittest.TestCase):
     def test_all_downloaded_versions(self):
         # We ensure that every version we've downloaded can be instantiated
         # and has a non-empty regex pattern.
-        for version in ['4.0', '5.0', '11.0', '12.0', '12.1', '13.0', '14.0', '15.0', '15.1', '16.0', 'latest']:
+        for version in ['4.0', '5.0', '11.0', '12.0', '12.1', '13.0', '14.0', '15.0', '15.1', '16.0']:
             extractor = Extractor(version=version)
             self.assertEqual(extractor.version, version)
             self.assertIsNotNone(extractor.big_regex)
