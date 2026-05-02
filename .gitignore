@@ -1,5 +1,7 @@
 dist/
 .git/
 .ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
 make regex/
 __pycache__/
+emoji_extractor/__pycache__/
