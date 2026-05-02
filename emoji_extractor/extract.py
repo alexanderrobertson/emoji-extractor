@@ -9,7 +9,7 @@ regex_file = 'big_regex.txt'
 emoji_file = 'possible_emoji.json'
 tme_regex_file = 'tme_regex.txt'
 
-DEFAULT_VERSION = '16.0'
+DEFAULT_VERSION = '17.0'
 
 class Extractor:
     """Some
