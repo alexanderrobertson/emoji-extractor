@@ -106,6 +106,19 @@ def update_latest():
     with open(extract_py_path, "w", encoding="utf-8") as f:
         f.write(extract_content)
         
+    # Update README.md
+    readme_path = "README.md"
+    if os.path.exists(readme_path):
+        with open(readme_path, "r", encoding="utf-8") as f:
+            readme_content = f.read()
+        match = re.search(r"Available versions: (.*)\.", readme_content)
+        if match:
+            versions_str = match.group(1)
+            if f"`{version}`" not in versions_str:
+                new_versions_str = f"{versions_str}, `{version}`"
+                readme_content = readme_content.replace(match.group(0), f"Available versions: {new_versions_str}.")
+                with open(readme_path, "w", encoding="utf-8") as f:
+                    f.write(readme_content)
     print(f"Successfully updated to Version {version}.")
     # We write a github output variable to trigger a commit/release
     if "GITHUB_OUTPUT" in os.environ:
