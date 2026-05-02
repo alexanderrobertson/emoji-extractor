@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "emoji_extractor"
-version = "17.0.a"
+version = "17.0.1"
 description = "Extract, detect and count emoji"
 readme = "README.md"
 authors = [
