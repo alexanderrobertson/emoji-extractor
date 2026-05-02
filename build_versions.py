@@ -61,7 +61,8 @@ def process_version(version):
             # The base character is everything without the skin tone.
             base_codes = [c for c in codes if c not in skin_tones]
             base_str = ''.join(chr(c) for c in base_codes)
-            tme_sequences.add(base_str)
+            if base_str:
+                tme_sequences.add(base_str)
             
         if status == 'component':
             components.add(emoji_str)

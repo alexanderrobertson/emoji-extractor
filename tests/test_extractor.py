@@ -8,7 +8,7 @@ class TestExtractor(unittest.TestCase):
 
     def test_extractor_init_default(self):
         extractor = Extractor()
-        self.assertEqual(extractor.version, '16.0')
+        self.assertEqual(extractor.version, '17.0')
 
     def test_extractor_invalid_version(self):
         with self.assertRaises(ValueError) as context:
@@ -44,6 +44,12 @@ class TestExtractor(unittest.TestCase):
         counts = count_emoji("Apple 🍎 and Banana 🍌🍌")
         self.assertEqual(counts['🍎'], 1)
         self.assertEqual(counts['🍌'], 2)
+
+    def test_count_tme_no_empty_string(self):
+        extractor = Extractor()
+        counts = extractor.count_tme("Siga todos que derem fav nesse tweet 💁🏻")
+        self.assertEqual(counts['💁🏻'], 1)
+        self.assertNotIn('', counts)
 
     @patch('emoji_extractor.extract.importlib.resources.files')
     def test_version_isolation(self, mock_files):
