@@ -1,7 +1,9 @@
 import unittest
+import json
 import os
 from unittest.mock import patch
 
+from collections import Counter
 from emoji_extractor import Extractor, detect_emoji, count_emoji
 
 class TestExtractor(unittest.TestCase):
@@ -18,14 +20,15 @@ class TestExtractor(unittest.TestCase):
     def test_lazy_loading(self):
         extractor = Extractor()
         # At this point, no files should have been read.
-        self.assertIsNone(extractor._big_regex)
+        self.assertIsNone(extractor._emoji_trie)
         self.assertIsNone(extractor._possible_emoji)
-        self.assertIsNone(extractor._tme)
+        self.assertIsNone(extractor._tme_trie)
         
         # Trigger lazy load
-        pattern = extractor.big_regex
-        self.assertIsNotNone(pattern)
-        self.assertIsNotNone(extractor._big_regex)
+        trie = extractor.emoji_trie
+        self.assertIsNotNone(trie)
+        self.assertIsInstance(trie, dict)
+        self.assertIsNotNone(extractor._emoji_trie)
 
     def test_detect_emoji_instance(self):
         extractor = Extractor()
@@ -60,11 +63,11 @@ class TestExtractor(unittest.TestCase):
             os.makedirs(version_dir)
             
             with open(os.path.join(version_dir, "possible_emoji.json"), "w", encoding="utf-8") as f:
-                f.write('["🍎"]')
-            with open(os.path.join(version_dir, "big_regex.txt"), "w", encoding="utf-8") as f:
-                f.write('🍎')
-            with open(os.path.join(version_dir, "tme_regex.txt"), "w", encoding="utf-8") as f:
-                f.write('🍎')
+                json.dump(["🍎"], f, ensure_ascii=False)
+            with open(os.path.join(version_dir, "emoji_sequences.json"), "w", encoding="utf-8") as f:
+                json.dump(["🍎"], f, ensure_ascii=False)
+            with open(os.path.join(version_dir, "tme_sequences.json"), "w", encoding="utf-8") as f:
+                json.dump(["🍎"], f, ensure_ascii=False)
                 
             mock_files.return_value = pathlib.Path(tmp_path)
             
@@ -75,11 +78,12 @@ class TestExtractor(unittest.TestCase):
 
     def test_all_downloaded_versions(self):
         # We ensure that every version we've downloaded can be instantiated
-        # and has a non-empty regex pattern.
-        for version in ['4.0', '5.0', '11.0', '12.0', '12.1', '13.0', '14.0', '15.0', '15.1', '16.0']:
+        # and has a non-empty trie and possible_emoji set.
+        for version in ['4.0', '5.0', '11.0', '12.0', '12.1', '13.0', '14.0', '15.0', '15.1', '16.0', '17.0']:
             extractor = Extractor(version=version)
             self.assertEqual(extractor.version, version)
-            self.assertIsNotNone(extractor.big_regex)
+            self.assertIsInstance(extractor.emoji_trie, dict)
+            self.assertTrue(len(extractor.emoji_trie) > 0)
             self.assertTrue(len(extractor.possible_emoji) > 0)
 
     def test_version_boundaries(self):
@@ -119,6 +123,91 @@ class TestExtractor(unittest.TestCase):
         # In 15.1, it will be counted as one single emoji (Lime).
         self.assertNotIn("🍋‍🟩", ext_15.count_emoji("🍋‍🟩"))
         self.assertIn("🍋‍🟩", ext_15_1.count_emoji("🍋‍🟩"))
+
+
+class TestTrieEngine(unittest.TestCase):
+    """Tests specific to the trie-based engine internals and new behaviour."""
+
+    def setUp(self):
+        self.ext = Extractor()
+
+    def test_trie_greedy_longest_match(self):
+        # 👩‍🦰 (woman with red hair) should be matched as one emoji,
+        # not as 👩 + ZWJ + 🦰 separately.
+        counts = self.ext.count_emoji("👩\u200d🦰")
+        self.assertEqual(len(counts), 1, "ZWJ sequence should match as single emoji")
+
+    def test_trie_overlapping_sequences(self):
+        # Flag sequences: 🇬🇧 is G + B regional indicators.
+        # Should be one match, not two separate regional indicator symbols.
+        counts = self.ext.count_emoji("🇬🇧")
+        self.assertEqual(sum(counts.values()), 1)
+
+    def test_check_first_is_noop(self):
+        text = "Hello 🍎 world 🍌🍌"
+        result_true = self.ext.count_emoji(text, check_first=True)
+        result_false = self.ext.count_emoji(text, check_first=False)
+        self.assertEqual(result_true, result_false)
+
+    def test_empty_string(self):
+        self.assertEqual(self.ext.count_emoji(""), Counter())
+        self.assertEqual(self.ext.count_tme(""), Counter())
+        self.assertEqual(self.ext.count_tones(""), Counter())
+
+    def test_no_emoji_text(self):
+        self.assertEqual(self.ext.count_emoji("Hello world, no emoji here!"), Counter())
+
+    def test_consecutive_emoji(self):
+        counts = self.ext.count_emoji("🍎🍌🍎")
+        self.assertEqual(counts['🍎'], 2)
+        self.assertEqual(counts['🍌'], 1)
+
+    def test_skin_tone_matching(self):
+        # 👋🏽 should be matched as a single toned emoji, not 👋 + tone
+        counts = self.ext.count_emoji("👋🏽")
+        self.assertEqual(sum(counts.values()), 1)
+        # The key should be the full toned sequence
+        self.assertIn("👋🏽", counts)
+
+    def test_deprecation_shim_big_regex(self):
+        with self.assertRaises(RuntimeError) as ctx:
+            _ = self.ext.big_regex
+        self.assertIn("removed", str(ctx.exception).lower())
+        self.assertIn("count_emoji", str(ctx.exception))
+
+    def test_deprecation_shim_tme(self):
+        with self.assertRaises(RuntimeError) as ctx:
+            _ = self.ext.tme
+        self.assertIn("removed", str(ctx.exception).lower())
+        self.assertIn("count_tme", str(ctx.exception))
+
+    def test_bulk_matches_serial(self):
+        lines = ["Hello 🍎", "World 🍌🍌", "No emoji here", "🎉🎉🎉"]
+        bulk = self.ext.count_all_emoji(lines)
+        # Manually aggregate serial results
+        serial = Counter()
+        for line in lines:
+            serial.update(self.ext.count_emoji(line))
+        self.assertEqual(bulk, serial)
+
+    def test_bulk_string_raises(self):
+        with self.assertRaises(TypeError):
+            self.ext.count_all_emoji("not an iterable of strings")
+        with self.assertRaises(TypeError):
+            self.ext.count_all_tme("not an iterable of strings")
+        with self.assertRaises(TypeError):
+            self.ext.count_all_tones("not an iterable of strings")
+
+    def test_n_workers_parameter(self):
+        ext = Extractor(n_workers=2)
+        self.assertEqual(ext.n_workers, 2)
+        ext.close()
+
+    def test_close_pool(self):
+        ext = Extractor()
+        ext.close()  # Should not raise even with no pool
+        ext.close()  # Should be safe to call twice
+
 
 if __name__ == '__main__':
     unittest.main()
