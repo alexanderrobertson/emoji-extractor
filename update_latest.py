@@ -1,3 +1,16 @@
+"""
+Automated Unicode update script (called by GitHub Actions weekly).
+
+Fetches the latest emoji-test.txt from unicode.org, detects if a new
+version has been released, and if so:
+  1. Generates emoji_sequences.json, tme_sequences.json, and possible_emoji.json
+  2. Updates DEFAULT_VERSION in extract.py
+  3. Updates the version list in README.md
+  4. Signals GitHub Actions to create a PR via GITHUB_OUTPUT
+
+See .github/workflows/update_unicode.yml for the workflow that calls this.
+"""
+
 import os
 import re
 import json
@@ -81,15 +94,12 @@ def update_latest():
     tme_list = list(tme_sequences)
     tme_list.sort(key=len, reverse=True)
     
-    big_regex_pattern = '|'.join(re.escape(s) for s in all_sequences)
-    tme_regex_pattern = '|'.join(re.escape(s) for s in tme_list)
-    
     # Save to specific version dir
     os.makedirs(out_dir, exist_ok=True)
-    with open(f"{out_dir}/big_regex.txt", "w", encoding="utf-8") as f:
-        f.write(big_regex_pattern)
-    with open(f"{out_dir}/tme_regex.txt", "w", encoding="utf-8") as f:
-        f.write(tme_regex_pattern)
+    with open(f"{out_dir}/emoji_sequences.json", "w", encoding="utf-8") as f:
+        json.dump(all_sequences, f, ensure_ascii=False)
+    with open(f"{out_dir}/tme_sequences.json", "w", encoding="utf-8") as f:
+        json.dump(tme_list, f, ensure_ascii=False)
     with open(f"{out_dir}/possible_emoji.json", "w", encoding="utf-8") as f:
         json.dump(list(possible_emoji), f, ensure_ascii=False)
         
