@@ -12,9 +12,9 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@main
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@main
         with:
           python-version: '3.x'
       - name: Install dependencies
@@ -24,7 +24,7 @@ jobs:
         run: python update_latest.py
       - name: Create Pull Request
         if: steps.update.outputs.updated == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@main
         with:
           commit-message: "feat: update unicode emoji data to version ${{ steps.update.outputs.new_version }}"
           title: "Update Unicode Emoji Data to Version ${{ steps.update.outputs.new_version }}"
