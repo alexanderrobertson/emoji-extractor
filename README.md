@@ -69,7 +69,7 @@ print(totals.most_common(5))
 
 ### Version Selection
 
-By default, the package uses the latest Unicode Emoji data (currently 17.0).
+By default, the package uses the latest Unicode Emoji data (currently 18.0).
 To extract emoji as defined in a specific historical version:
 
 ```python
