@@ -25,7 +25,7 @@ EMOJI_SEQ_FILE = 'emoji_sequences.json'
 TME_SEQ_FILE = 'tme_sequences.json'
 POSSIBLE_EMOJI_FILE = 'possible_emoji.json'
 
-DEFAULT_VERSION = '17.0'
+DEFAULT_VERSION = '18.0'
 
 # Bulk operations with fewer lines than this threshold will run serially.
 # Above this threshold, work is distributed across multiple processes.

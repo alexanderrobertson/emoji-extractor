@@ -83,7 +83,7 @@ ext_14.detect_emoji("🩷")  # False
 ext_15.detect_emoji("🩷")  # True
 ```
 
-Available versions: `4.0`, `5.0`, `11.0`, `12.0`, `12.1`, `13.0`, `14.0`, `15.0`, `15.1`, `16.0`, `17.0`.
+Available versions: `4.0`, `5.0`, `11.0`, `12.0`, `12.1`, `13.0`, `14.0`, `15.0`, `15.1`, `16.0`, `17.0`, `18.0`.
 
 ### Tone-Modifiable Emoji
 
