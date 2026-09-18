@@ -133,6 +133,10 @@ The trie scanner walks through text character by character, always matching the 
 
 ## Changelog
 
+### 18.0
+
+Added support for Unicode 18.0.
+
 ### 17.0.2
 - **Engine**: Regex replaced with pure-Python trie (27× faster single, 115× bulk with multiprocessing)
 - **Data**: `big_regex.txt` / `tme_regex.txt` → `emoji_sequences.json` / `tme_sequences.json`
