@@ -10,7 +10,7 @@ class TestExtractor(unittest.TestCase):
 
     def test_extractor_init_default(self):
         extractor = Extractor()
-        self.assertEqual(extractor.version, '17.0')
+        self.assertEqual(extractor.version, '18.0')
 
     def test_extractor_invalid_version(self):
         with self.assertRaises(ValueError) as context:
